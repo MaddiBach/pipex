@@ -1,0 +1,8 @@
+a.out
+libft
+maiin.c
+test.txt
+a.out
+libft
+maiin.c
+test.txt
