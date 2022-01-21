@@ -6,17 +6,18 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:09:38 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/11 02:41:32 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/21 11:37:55 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include    "pipex.h"
 
-char    **ft_get_bin_path(char  **envp)
+char    **ft_get_bin_path(char  **envp, char **args)
 {
     int i;
     char    *trimmed;
     char    **binpath;
+    char    **tmp;
 
     i = 0;
     while (!ft_strnstr(envp[i], "PATH", 5))
@@ -24,6 +25,10 @@ char    **ft_get_bin_path(char  **envp)
     trimmed = ft_strtrim(envp[i], "PATH=");
     binpath = ft_split(trimmed, ':');
     free(trimmed);
+    tmp = binpath;
+    binpath = ft_join_path_bin(binpath, args);
+   // free(tmp);
+
     return (binpath);
 }
 
@@ -37,11 +42,6 @@ char    *ft_get_access(char **binpath)
     return (binpath[i]);
 }
 
-char    **ft_get_args(char *args)
-{
-    return (ft_split(args, ' '));
-}
-
 char    **ft_join_path_bin(char **binpath, char **args)
 {
     int i;
@@ -52,10 +52,10 @@ char    **ft_join_path_bin(char **binpath, char **args)
     {
         tmp = binpath[i];
         binpath[i] = ft_strjoin(binpath[i], "/");
-        free(tmp);
+       // free(tmp);
         tmp = binpath[i];
         binpath[i] = ft_strjoin(binpath[i], args[0]);
-        free(tmp);
+       // free(tmp);
         i++;
     }
     return (binpath);
