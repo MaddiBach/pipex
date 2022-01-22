@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/21 18:59:33 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/22 18:25:23 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,60 +69,63 @@ void    ft_exec_lst(t_cmd *lst)
     }
 }
 
-void    ft_redir(char **envp, t_cmd *cmdlst)
+void    ft_close(int *fd)
 {
-    int tmp = dup(STDIN_FILENO);
+    dup2(fd[0], STDIN_FILENO);
+    close(fd[1]);
+    close(fd[0]);
+}
+
+pid_t    ft_redir(char **envp, t_cmd *cmdlst)
+{
     int pip[2];
+    int tmp = dup(STDIN_FILENO);
+    pipe(pip);
     int pid = fork();
     if (!pid)
     {
-        // RECUPERE LENTREE STANDARD POUR CHAQUE PROCESS SAUF LE PREMIER QUI PREND infile
-        dup2(pip[1], STDOUT_FILENO);
-        exec;
-
+        close(pip[READ]);
+        dup2(pip[WRITE], STDOUT_FILENO);
+        close(pip[WRITE]);
+        execve(ft_get_access(cmdlst->binpath), cmdlst->args, envp);
     }
-    else
-    {
-        //DANS LE PARENT, CLOSE LE PIPE MAIS AVANT dup2(0, fd[0]) POUR RECUP CE QUI A ETE ECRIT DEDANS
-        dup2(0, pip[0]);
-        close(pip[1]);
-        close(pip[2]);
-    }
+    close(pip[WRITE]);
+    dup2(pip[READ], tmp);
+    close(pip[READ]);
+    execve(ft_get_access(cmdlst->binpath), cmdlst->args, envp);
+    return (pid);
 }
 
-/*
-int main(int ac, char **av, char **envp)
+int	ft_cmdsize(t_cmd *lst)
 {
-    t_cmd *cmdlst;
-    int infilefd;
+	int	i;
 
-    cmdlst = make_cmd_lst(ac, av, envp);
-    ft_printlst(cmdlst);
-    int fd = dup(0);
-    printf("fd = %i", fd);
-    int pip[2];
-    pipe(pip);
-    infilefd = open(av[1] , O_RDONLY);
-    dup2(infilefd, 0);
-    dup2(pip[1], 1);
-    close(pip[0]);
-    //close(fd);
-    execve(ft_get_access(cmdlst->binpath), cmdlst->args, envp);
-}*/
+	i = 0;
+	while (lst)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i);
+}
 
 int main(int ac, char **av, char **envp)
 {
 
     t_cmd *cmdlst = make_cmd_lst(ac, av, envp);
-    int id = fork();
-    if (id == 0)
+    int processes[ft_cmdsize(cmdlst) + 1];
+    if (!cmdlst)
+        return (1);
+    int i = 0;
+    int fopen = open(av[1], O_RDONLY);
+    dup2(fopen, STDIN_FILENO);
+    while (cmdlst->next)
     {
-        int i = 3;
-        ft_redir(fd,envp, cmdlst)
-        while (i < ac - 1)
-        {
-            ft_redir(fd);
-        }
-
-    };    
+        processes[i++] = ft_redir(envp, cmdlst);
+        cmdlst = cmdlst->next;
+    }
+    i =  0;
+    while(i <= ft_cmdsize(cmdlst))
+        waitpid(processes[i++], NULL, 0);
+    close(fopen);
 }

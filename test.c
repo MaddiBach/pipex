@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+/*
 int main()
 {
 	int fd[2];
@@ -25,4 +26,27 @@ int main()
 	dup2(outfd, 1);
 	read(fd[0], str, 8);
 	printf("%s\n", str);
+}*/
+
+int main()
+{	
+	int pip[2];
+	int in = dup(0);
+	pipe(pip);
+	int pid = fork();
+	if (!pid)
+	{
+		dup2(pip[1], 1);
+		write(1, "bonjour", 7);
+	}
+	else
+	{
+		dup2(0, pip[0]);
+		close(pip[1]);
+		close(pip[0]);
+	}
+	char *str = malloc(100);
+	read(pip[1], str, 7);
+
+
 }
