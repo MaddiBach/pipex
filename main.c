@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/22 18:25:23 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/22 20:18:03 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,9 @@ void    ft_close(int *fd)
     close(fd[0]);
 }
 
-pid_t    ft_redir(char **envp, t_cmd *cmdlst)
+pid_t    ft_redir(char **envp, t_cmd *cmdlst, int sdin)
 {
     int pip[2];
-    int tmp = dup(STDIN_FILENO);
     pipe(pip);
     int pid = fork();
     if (!pid)
@@ -90,9 +89,8 @@ pid_t    ft_redir(char **envp, t_cmd *cmdlst)
         execve(ft_get_access(cmdlst->binpath), cmdlst->args, envp);
     }
     close(pip[WRITE]);
-    dup2(pip[READ], tmp);
+    dup2(pip[READ], sdin);
     close(pip[READ]);
-    execve(ft_get_access(cmdlst->binpath), cmdlst->args, envp);
     return (pid);
 }
 
@@ -114,6 +112,7 @@ int main(int ac, char **av, char **envp)
 
     t_cmd *cmdlst = make_cmd_lst(ac, av, envp);
     int processes[ft_cmdsize(cmdlst) + 1];
+    int sdin = dup(STDIN_FILENO);
     if (!cmdlst)
         return (1);
     int i = 0;
@@ -121,11 +120,19 @@ int main(int ac, char **av, char **envp)
     dup2(fopen, STDIN_FILENO);
     while (cmdlst->next)
     {
-        processes[i++] = ft_redir(envp, cmdlst);
+        processes[i++] = ft_redir(envp, cmdlst, sdin);
         cmdlst = cmdlst->next;
     }
+    int dope = open(av[ac - 1],O_CREAT | O_TRUNC | O_RDWR, 0777);
+    printf("file = %s\n", av[ac - 1]);
+    if (dope < 0)
+        puts("error");
+    dup2(dope, STDOUT_FILENO);
+    execve(ft_get_access(cmdlst->binpath), cmdlst->args, envp);
     i =  0;
     while(i <= ft_cmdsize(cmdlst))
         waitpid(processes[i++], NULL, 0);
     close(fopen);
+    close(dope);
+    close(sdin);
 }

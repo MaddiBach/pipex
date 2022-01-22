@@ -29,24 +29,8 @@ int main()
 }*/
 
 int main()
-{	
-	int pip[2];
-	int in = dup(0);
-	pipe(pip);
-	int pid = fork();
-	if (!pid)
-	{
-		dup2(pip[1], 1);
-		write(1, "bonjour", 7);
-	}
-	else
-	{
-		dup2(0, pip[0]);
-		close(pip[1]);
-		close(pip[0]);
-	}
-	char *str = malloc(100);
-	read(pip[1], str, 7);
-
-
-}
+{
+	int fd = open("test.txt", O_RDWR | O_CREAT | O_TRUNC);
+	dup2(fd, 1);
+	write(1, "b", 1);
+}	
