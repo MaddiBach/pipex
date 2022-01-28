@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/28 08:49:36 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/28 13:05:35 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void    ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
     current->pid = fork();
     if (!current->pid)
     {
-		if (current == firstcmd)
+		if (current != firstcmd)
 			dup2(fd->sdin, STDIN_FILENO);
 		if (current->next)
         	dup2(fd->pip[WRITE], STDOUT_FILENO);
@@ -82,6 +82,7 @@ void    ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
         ft_close(fd);
         execve(ft_get_access(current->binpath), current->args, envp);
     }
+
     dup2(fd->pip[READ], fd->sdin);
     close(fd->pip[WRITE]);
     close(fd->pip[READ]);
@@ -103,14 +104,14 @@ int	ft_cmdsize(t_cmd *lst)
 
 int main(int ac, char **av, char **envp)
 {
-    t_cmd *cmdlst;
-    t_cmd *current;
-	t_fd	*fd;
+    t_cmd   *cmdlst;
+    t_cmd   *current;
+	t_fd        *fd;
 
     if (ac < 5)
         return (-1);
     cmdlst = make_cmd_lst(ac, av, envp);
-    fd = ft_open(ac, av);
+    fd = ft_open(ac, av, ft_strncmp(av[1], "here_doc", 8));
     if (!fd)
         return (-1);
     dup2(fd->infile, STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:13:12 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/28 04:38:35 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/28 13:10:41 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,5 @@ t_cmd   *ft_newlst(char **envp, char *arg, int index);   // <- create a new list
 void    ft_lstadd_cmd(t_cmd **first, char **envp, char *arg, int index);   // <- add a command to the end of the list
 char    **ft_join_path_bin(char **binpath, char **args);   // <- joins the PATH with the command name
 void    ft_close(t_fd *fd);   // <- close all files stored in struct
-t_fd    *ft_open(int ac, char **av);   // <- open all files needed and store them in a struc
+t_fd    *ft_open(int ac, char **av,int heredoc);   // <- open all files needed and store them in a struc
 #endif
