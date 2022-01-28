@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lnelson <lnelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:13:12 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/22 17:23:05 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/27 07:17:23 by lnelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,15 @@ typedef struct s_cmd
 {
     char            **binpath;
     char            **args;
-    int             pos;
     struct  s_cmd   *next;
 }                   t_cmd;
+
+typedef struct s_fd
+{
+	int	pip[2];
+	int sdin;
+	int sdout;
+}				t_fd;
   /////////////
  /* PARSING */
 /////////////
@@ -45,6 +51,6 @@ char    *ft_get_access(char **binpath);   // <- Parse multiple binary path to re
 t_cmd   *ft_newlst(char **envp, char *arg, int index);
 void    ft_lstadd_cmd(t_cmd **first, char **envp, char *arg, int index);
 char    **ft_join_path_bin(char **binpath, char **args);
-void    ft_close( int *fd);
+void    ft_close(t_fd *fd);
 
 #endif

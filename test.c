@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "pipex.h"
 /*
 int main()
 {
@@ -30,7 +31,8 @@ int main()
 
 int main()
 {
-	int fd = open("test.txt", O_RDWR | O_CREAT | O_TRUNC);
-	dup2(fd, 1);
-	write(1, "b", 1);
-}	
+	t_fd *fd;
+	fd = malloc(sizeof(t_fd));
+	pipe(fd->pip);
+	fd->sdin = 2;
+}

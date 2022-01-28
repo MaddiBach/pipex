@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lists.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lnelson <lnelson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 01:07:57 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/21 10:55:23 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/27 07:19:55 by lnelson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ t_cmd   *ft_newlst(char **envp, char *arg, int index)
         return (NULL);
     new->args = ft_split(arg, ' ');
     new->binpath = ft_get_bin_path(envp, new->args);
-    new->pos = index - 2;
     new->next = NULL;
     return (new);
 }
