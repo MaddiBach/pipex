@@ -10,7 +10,8 @@ LIBFT_PATH = libft
 SRCS = \
 main.c \
 parsing.c \
-lists.c
+lists.c \
+utils.c
 
 OBJ = $(SRCS:.c=.o)
 
@@ -20,7 +21,7 @@ ${NAME}: ${OBJ}
 	make -C ./libft
 	gcc ${FLAGS} ${OBJ} libft/libft.a -o ${NAME}
 
-
+re: clean all
 lib:
 	@make -C ./libft
 

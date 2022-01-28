@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lnelson <lnelson@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:13:12 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/27 07:17:23 by lnelson          ###   ########.fr       */
+/*   Updated: 2022/01/28 04:38:35 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,27 @@ typedef struct s_cmd
 {
     char            **binpath;
     char            **args;
+    pid_t           pid;
     struct  s_cmd   *next;
 }                   t_cmd;
 
 typedef struct s_fd
 {
-	int	pip[2];
+	int pip[2];
 	int sdin;
-	int sdout;
+	int outfile;
+  int infile;
 }				t_fd;
+
   /////////////
  /* PARSING */
 /////////////
 
 char    **ft_get_bin_path(char **envp, char **args);   // <- Parse environment variables to return multiple binary path : **/bin
 char    *ft_get_access(char **binpath);   // <- Parse multiple binary path to return path to accessible binary 
-t_cmd   *ft_newlst(char **envp, char *arg, int index);
-void    ft_lstadd_cmd(t_cmd **first, char **envp, char *arg, int index);
-char    **ft_join_path_bin(char **binpath, char **args);
-void    ft_close(t_fd *fd);
-
+t_cmd   *ft_newlst(char **envp, char *arg, int index);   // <- create a new list 
+void    ft_lstadd_cmd(t_cmd **first, char **envp, char *arg, int index);   // <- add a command to the end of the list
+char    **ft_join_path_bin(char **binpath, char **args);   // <- joins the PATH with the command name
+void    ft_close(t_fd *fd);   // <- close all files stored in struct
+t_fd    *ft_open(int ac, char **av);   // <- open all files needed and store them in a struc
 #endif
