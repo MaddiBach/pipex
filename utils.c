@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:07:39 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/28 13:10:16 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/28 23:08:23 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_close(t_fd *fd)
 t_fd    *ft_open(int ac, char **av, int heredoc)
 {
     t_fd    *fd;
-    printf("heredoc : %i\n", heredoc);
+    
     fd = malloc(sizeof(t_fd));
     if (!fd)
         return (NULL);

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lists.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lnelson <lnelson@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 01:07:57 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/27 07:19:55 by lnelson          ###   ########.fr       */
+/*   Updated: 2022/01/28 23:12:41 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include    "pipex.h"
 
-t_cmd   *ft_newlst(char **envp, char *arg, int index)
+t_cmd   *ft_newlst(char **envp, char *arg)
 {
     t_cmd   *new;
 
@@ -25,14 +25,14 @@ t_cmd   *ft_newlst(char **envp, char *arg, int index)
     return (new);
 }
 
-void    ft_lstadd_cmd(t_cmd **first, char **envp, char *arg, int index)
+void    ft_lstadd_cmd(t_cmd **first, char **envp, char *arg)
 {
     t_cmd   *newcmd;
     t_cmd   *tmp;
 
     if (!envp || !arg)
         return ;
-    newcmd = ft_newlst(envp, arg, index);
+    newcmd = ft_newlst(envp, arg);
     tmp = *first;
     while (tmp && tmp->next)
         tmp = tmp->next;

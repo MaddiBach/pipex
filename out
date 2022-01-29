@@ -1,6 +1,2 @@
-total 84
--rw-r--r-- 1 maddi 2021_paris  1640 Jan 28 13:01 lists.o
--rw-r--r-- 1 maddi 2021_paris  4104 Jan 28 13:01 main.o
--rwxr-xr-x 1 maddi 2021_paris     0 Jan 28 13:03 out
--rw-r--r-- 1 maddi 2021_paris  2312 Jan 28 13:01 parsing.o
--rw-r--r-- 1 maddi 2021_paris  1736 Jan 28 13:01 utils.o
+-rw-r--r-- 1 maddi 2021_paris  3653 Jan 28 23:19 main.c
+-rw-r--r-- 1 maddi 2021_paris  4144 Jan 28 23:19 main.o

@@ -6,22 +6,30 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/28 13:05:35 by maddi            ###   ########.fr       */
+/*   Updated: 2022/01/28 23:19:24 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_cmd   *make_cmd_lst(int ac, char **av, char **envp)
+t_cmd   *make_cmd_lst(int ac, char **av, char **envp, int heredoc)
 {
     int i;
     t_cmd *lst;
 
-    lst = ft_newlst(envp, av[2], 2);
-    i = 3;
+    if (!heredoc)
+    {
+        lst = ft_newlst(envp, av[3]);
+        i = 4;
+    }
+    else
+    {
+        lst = ft_newlst(envp, av[2]);
+        i = 3;
+    }
     while (i < ac - 1)
     {
-        ft_lstadd_cmd(&lst, envp, av[i], i);
+        ft_lstadd_cmd(&lst, envp, av[i]);
         i++;
     }
     return (lst);
@@ -52,7 +60,7 @@ void    ft_printlst(t_cmd *lst)
         lst = lst->next;
     }
 }
-
+/*
 void    ft_exec_lst(t_cmd *lst)
 {
 //    t_cmd *tmp;
@@ -67,7 +75,33 @@ void    ft_exec_lst(t_cmd *lst)
         }
     }
 }
+*/
+/*
+void    ft_heredoc(char *delim, t_fd *fd)
+{
+    char    *line;
+    char    *delim;
 
+    close (fd->pip[READ]);
+    delim = ft_strjoin(delim, "\n");
+    line = ft_get_next_line(STDIN_FILENO);
+    while(line)
+    {
+        if (!ft_strncmp(line, delim, ft_strlen(delim)))
+        {
+            close(fd->pip[WRITE]);
+            free(line);
+            free(delim);
+            exit(EXIT_SUCCESS);
+        }
+        free(line);
+        line = ft_get_next_line();
+    }
+    close(fd->pip[WRITE]);
+    free(line);
+    free(delim);
+}
+*/
 void    ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 {
     current->pid = fork();
@@ -110,7 +144,7 @@ int main(int ac, char **av, char **envp)
 
     if (ac < 5)
         return (-1);
-    cmdlst = make_cmd_lst(ac, av, envp);
+    cmdlst = make_cmd_lst(ac, av, envp, ft_strncmp(av[1], "here_doc", 8));
     fd = ft_open(ac, av, ft_strncmp(av[1], "here_doc", 8));
     if (!fd)
         return (-1);
@@ -124,10 +158,6 @@ int main(int ac, char **av, char **envp)
     }
 	ft_redir(envp, current, fd, cmdlst);
     current = cmdlst;
-    while(current)
-    {
-        waitpid(current->pid, NULL, 0);
-        current = current->next;
-    }
+    waitpid(-1, NULL, -1);
 	ft_close(fd);
 }
