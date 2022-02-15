@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:07:39 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/28 23:08:23 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/10 19:46:58 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,17 @@ t_fd    *ft_open(int ac, char **av, int heredoc)
     fd = malloc(sizeof(t_fd));
     if (!fd)
         return (NULL);
-    
     if (!heredoc)
+    {
         fd->outfile = open(av[ac - 1],O_CREAT | O_APPEND | O_RDWR, 0777);
+        fd->infile = 0;
+    }
     else
+    {
+        fd->infile = open(av[1], O_RDONLY);
         fd->outfile = open(av[ac - 1],O_CREAT | O_TRUNC | O_RDWR, 0777);
-    if (fd->outfile < 0)
-        return (NULL);
-    fd->infile = open(av[1], O_RDONLY);
-    if (fd->infile < 0)
+    }
+    if (fd->outfile < 0 || fd->infile < 0)
         return (NULL);
     fd->sdin = dup(STDIN_FILENO);
     return (fd);    

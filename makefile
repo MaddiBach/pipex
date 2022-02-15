@@ -11,7 +11,9 @@ SRCS = \
 main.c \
 parsing.c \
 lists.c \
-utils.c
+utils.c \
+get_next_line/get_next_line.c \
+get_next_line/get_next_line_utils.c
 
 OBJ = $(SRCS:.c=.o)
 

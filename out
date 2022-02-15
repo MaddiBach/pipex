@@ -1,2 +1,19 @@
--rw-r--r-- 1 maddi 2021_paris  3653 Jan 28 23:19 main.c
--rw-r--r-- 1 maddi 2021_paris  4144 Jan 28 23:19 main.o
+exec
+get_next_line
+get_next_lineee
+libft
+lists.c
+lists.o
+main.c
+main.o
+makefile
+out
+out1
+out2
+parsing.c
+parsing.o
+pipex
+pipex.h
+test.c
+utils.c
+utils.o

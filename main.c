@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/01/28 23:19:24 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/15 17:24:57 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,14 @@ void    ft_exec_lst(t_cmd *lst)
     }
 }
 */
-/*
+
 void    ft_heredoc(char *delim, t_fd *fd)
 {
     char    *line;
-    char    *delim;
 
     close (fd->pip[READ]);
     delim = ft_strjoin(delim, "\n");
-    line = ft_get_next_line(STDIN_FILENO);
+    line = get_next_line(STDIN_FILENO);
     while(line)
     {
         if (!ft_strncmp(line, delim, ft_strlen(delim)))
@@ -94,14 +93,15 @@ void    ft_heredoc(char *delim, t_fd *fd)
             free(delim);
             exit(EXIT_SUCCESS);
         }
+        ft_putstr_fd(line, fd->pip[WRITE]);
         free(line);
-        line = ft_get_next_line();
+        line = get_next_line(STDIN_FILENO);
     }
-    close(fd->pip[WRITE]);
+    //close(fd->pip[WRITE]);
     free(line);
     free(delim);
 }
-*/
+
 void    ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 {
     current->pid = fork();
@@ -114,6 +114,7 @@ void    ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 		else
 			dup2(fd->outfile, STDOUT_FILENO);
         ft_close(fd);
+        puts("exec");
         execve(ft_get_access(current->binpath), current->args, envp);
     }
 
@@ -144,14 +145,17 @@ int main(int ac, char **av, char **envp)
 
     if (ac < 5)
         return (-1);
-    cmdlst = make_cmd_lst(ac, av, envp, ft_strncmp(av[1], "here_doc", 8));
     fd = ft_open(ac, av, ft_strncmp(av[1], "here_doc", 8));
     if (!fd)
         return (-1);
+    cmdlst = make_cmd_lst(ac, av, envp, ft_strncmp(av[1], "here_doc", 8));
     dup2(fd->infile, STDIN_FILENO);
+    if (!ft_strncmp(av[1], "here_doc", 8))
+        ft_heredoc(av[2], fd);
     current = cmdlst;
     while (current->next)
     {
+        puts("exec ?");
     	pipe(fd->pip);
         ft_redir(envp, current, fd, cmdlst);
         current = current->next;
