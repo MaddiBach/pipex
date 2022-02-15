@@ -18,7 +18,3 @@ pipex.h
 test.c
 utils.c
 utils.o
-
-
-
-

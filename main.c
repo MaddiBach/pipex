@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/15 17:24:57 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/15 20:06:05 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,6 @@ int main(int ac, char **av, char **envp)
     current = cmdlst;
     while (current->next)
     {
-        puts("exec ?");
     	pipe(fd->pip);
         ft_redir(envp, current, fd, cmdlst);
         current = current->next;
