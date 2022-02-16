@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/15 20:06:05 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/16 17:42:41 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void    ft_heredoc(char *delim, t_fd *fd)
 
     close (fd->pip[READ]);
     delim = ft_strjoin(delim, "\n");
-    line = get_next_line(STDIN_FILENO);
+    line = get_next_line(fd->sdin);
     while(line)
     {
         if (!ft_strncmp(line, delim, ft_strlen(delim)))
@@ -95,7 +95,7 @@ void    ft_heredoc(char *delim, t_fd *fd)
         }
         ft_putstr_fd(line, fd->pip[WRITE]);
         free(line);
-        line = get_next_line(STDIN_FILENO);
+        line = get_next_line(fd->sdin);
     }
     //close(fd->pip[WRITE]);
     free(line);
@@ -114,7 +114,6 @@ void    ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 		else
 			dup2(fd->outfile, STDOUT_FILENO);
         ft_close(fd);
-        puts("exec");
         execve(ft_get_access(current->binpath), current->args, envp);
     }
 
