@@ -60,22 +60,6 @@ void    ft_printlst(t_cmd *lst)
         lst = lst->next;
     }
 }
-/*
-void    ft_exec_lst(t_cmd *lst)
-{
-//    t_cmd *tmp;
-
-    int pid = fork();
-    if (pid == 0)
-    {
-        while (lst)
-        {
-            int pid = fork();
-            lst = lst->next;
-        }
-    }
-}
-*/
 
 void    ft_heredoc(char *delim, t_fd *fd)
 {
