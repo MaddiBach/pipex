@@ -13,14 +13,15 @@ parsing.c \
 lists.c \
 utils.c \
 get_next_line/get_next_line.c \
-get_next_line/get_next_line_utils.c
+get_next_line/get_next_line_utils.c \
+clean.c
 
 OBJ = $(SRCS:.c=.o)
 
 all: ${NAME}
 
 ${NAME}: ${OBJ}
-	make -C ./libft
+	make bonus -C ./libft
 	gcc ${FLAGS} ${OBJ} libft/libft.a -o ${NAME}
 
 re: clean all
