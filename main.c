@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/24 14:06:43 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/26 14:05:44 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,14 @@ void	ft_heredoc(char *delim, t_fd *fd)
 
 	pipret = pipe(fd->pip);
 	if (pipret == -1)
-	{
-		perror("pipe ");
-		ft_putstr_fd(strerror(errno), 2);
-		return ;
-	}
+		return(ft_handle_error("pipe in ft_heredoc"));
 	pid = fork();
 	if (pid == 0)
 	{
 		delim = ft_strjoin(delim, "\n"); //can fail
 		if (!delim)
 		{
-			perror("malloc in heredoc");
-			ft_putstr_fd(strerror(errno), 2);
+			perror("ft_strjoin malloc in ft_heredoc");
 			exit(EXIT_FAILURE);
 		}
 		line = get_next_line(fd->sdin);
@@ -81,14 +76,18 @@ void	ft_heredoc(char *delim, t_fd *fd)
 
 void	ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 {
-	int	pid;
+	pid_t	pid;
+	int	pipret;
 
-	pipe(fd->pip);
+	pipret = pipe(fd->pip);
+	if (pipret == -1)
+		ft_handle_error("pipe ");
 	pid = fork();
 	if (!pid)
 	{
 		ft_dup(current, firstcmd, fd);
 		ft_close(fd);
+		printf("binpath = %s\n", current->binpath);
 		execve(current->binpath, current->args, envp);
 	}
 	dup2(fd->pip[READ], fd->sdin);

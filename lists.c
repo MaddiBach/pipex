@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 01:07:57 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/24 13:54:00 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/25 15:11:33 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_lstadd_cmd(t_cmd **first, char **envp, char *arg)
 	newcmd = ft_newlst(envp, arg);
 	if (!newcmd)
 	{
-		perror("malloc in addcmd");
+		perror("ft_newlst malloc in addcmd");
 		ft_putstr_fd(strerror(errno), 2);
 		return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:07:39 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/24 12:49:13 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/25 14:41:33 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,10 @@ t_fd	*ft_open(int ac, char **av, int heredoc)
 		fd->infile = open(av[1], O_RDONLY);
 		fd->outfile = open(av[ac - 1], O_CREAT | O_TRUNC | O_RDWR, 0777);
 	}
-	if (fd->infile < 0)
-	{
-		perror("infile open :");
-		ft_putstr_fd(strerror(errno), 2);
-		return (NULL);
-	}
+	if (fd->infile < 0)	
+		return (ft_handle_error("infile open :"));
 	if (fd->outfile < 0)
-	{
-		perror("outfile open :");
-		ft_putstr_fd(strerror(errno), 2);
-		return (NULL);
-	}
+		return (ft_handle_error("outfile open :"));
 	fd->sdin = dup(STDIN_FILENO);
 	return (fd);
 }
