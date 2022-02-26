@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:13:12 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/24 12:52:54 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/26 17:22:26 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,10 @@ void				ft_cmdclear(t_cmd **cmd, void (*del)(t_cmd *));
 // <- free a list of cmds using ft_delcmd
 void				ft_cmditer(char **envp, t_fd *fd, t_cmd *cmdlst);
 // <- iterate through cmd list and redir + exec
-void				ft_dup(t_cmd *cmd, t_cmd *firstcmd, t_fd *fd);
+void				*ft_dup(t_cmd *cmd, t_cmd *firstcmd, t_fd *fd);
 // <- redirect using dup2, with infile when positionned at firstcmd, pipe,
 //	and outfile when positionned at lastcmd
 void	*ft_handle_error(char *str);
+void	ft_read_sdin(char *delim, t_fd *fd);
 
 #endif

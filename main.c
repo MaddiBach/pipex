@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/26 14:05:44 by maddi            ###   ########.fr       */
+/*   Updated: 2022/02/26 18:13:03 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_cmd	*make_cmd_lst(int ac, char **av, char **envp, int heredoc)
 	return (lst);
 }
 
-void	ft_heredoc(char *delim, t_fd *fd)
+void	*ft_heredoc(char *delim, t_fd *fd)
 {
 	char	*line;
 	pid_t	pid;
@@ -46,31 +46,13 @@ void	ft_heredoc(char *delim, t_fd *fd)
 		return(ft_handle_error("pipe in ft_heredoc"));
 	pid = fork();
 	if (pid == 0)
-	{
-		delim = ft_strjoin(delim, "\n"); //can fail
-		if (!delim)
-		{
-			perror("ft_strjoin malloc in ft_heredoc");
-			exit(EXIT_FAILURE);
-		}
-		line = get_next_line(fd->sdin);
-		while (line)
-		{
-			if (!ft_strncmp(line, delim, ft_strlen(delim)))
-				ft_close_heredoc(fd, line, delim);
-			ft_putstr_fd(line, fd->pip[WRITE]);
-			free(line);
-			line = get_next_line(fd->sdin);
-		}
-		free(line);
-		free(delim);
-	}
+		ft_read_sdin(delim, fd);
 	else
 	{
-		dup2(fd->pip[READ], fd->sdin);
-		waitpid(pid, NULL, 0);
+		dup2(fd->pip[READ], STDIN_FILENO);
 		close(fd->pip[0]);
 		close(fd->pip[1]);
+		waitpid(pid, NULL, 0);
 	}
 }
 
@@ -81,13 +63,12 @@ void	ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 
 	pipret = pipe(fd->pip);
 	if (pipret == -1)
-		ft_handle_error("pipe ");
+		ft_handle_error("pipe in ft_redir");
 	pid = fork();
 	if (!pid)
 	{
 		ft_dup(current, firstcmd, fd);
 		ft_close(fd);
-		printf("binpath = %s\n", current->binpath);
 		execve(current->binpath, current->args, envp);
 	}
 	dup2(fd->pip[READ], fd->sdin);
@@ -110,8 +91,7 @@ int	main(int ac, char **av, char **envp)
 	dupret = dup2(fd->infile, STDIN_FILENO);
 	if (dupret == -1)
 	{
-		perror("dup2 ");
-		ft_putstr_fd(strerror(errno), 2);
+		perror("dup2 in main");
 		return (-1);
 	}
 	if (!ft_strncmp(av[1], "here_doc", 8))
