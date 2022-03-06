@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:13:12 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/06 06:08:00 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/06 12:45:46 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 //////////////
 /* INCLUDES */
 //////////////
-# define _GNU_SOURCE
+# define __O_TMPFILE 020000000
+# define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
+# define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)
 # include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
 # include <errno.h>
