@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 01:07:57 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/25 15:11:33 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/05 23:19:46 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_cmdsize(t_cmd *lst)
 	return (i);
 }
 
-void	ft_cmditer(char **envp, t_fd *fd, t_cmd *cmdlst)
+void	ft_exec_cmd_lst(char **envp, t_fd *fd, t_cmd *cmdlst)
 {
 	t_cmd	*current;
 

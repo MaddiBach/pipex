@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:07:39 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/26 17:41:16 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/06 06:55:35 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,25 @@ void	ft_close(t_fd *fd)
 	close(fd->infile);
 }
 
-void	ft_close_heredoc(t_fd *fd, char *line, char *delim)
-{
-	ft_close(fd);
-	free(line);
-	free(delim);
-	exit(EXIT_SUCCESS);
-}
-
-void	ft_read_sdin(char *delim, t_fd *fd)
+void	ft_read_sdin(char *delim, int fd)
 {
 	char *line;
-	
 	line = get_next_line(STDIN_FILENO);
+	char *tmp;
+
+	tmp = ft_strjoin(delim, "\n");
 	while (line)
 	{
-		if (!ft_strncmp(line, delim, ft_strlen(delim)))
-			ft_close_heredoc(fd, line, delim);
-		ft_putstr_fd(line, fd->pip[WRITE]);
+		if (!ft_strncmp(line, tmp, ft_strlen(line)))
+		{
+			free(line);
+			free(tmp);
+			return ;
+		}
+		ft_putstr_fd(line, fd);
 		free(line);
 		line = get_next_line(STDIN_FILENO);
 	}
-	free(line);
-	free(delim);
 }
 
 t_fd	*ft_open(int ac, char **av, int heredoc)
@@ -56,7 +52,7 @@ t_fd	*ft_open(int ac, char **av, int heredoc)
 	if (!heredoc)
 	{
 		fd->outfile = open(av[ac - 1], O_CREAT | O_APPEND | O_RDWR, 0777);
-		fd->infile = 0;
+		fd->infile = ft_heredoc(av[2], fd);
 	}
 	else
 	{
@@ -85,18 +81,18 @@ void	*ft_dup(t_cmd *current, t_cmd *firstcmd, t_fd *fd)
     {
 		dupret = dup2(fd->sdin, STDIN_FILENO);
         if (dupret == -1)
-            return(ft_handle_error("dup2 firstcmd"));
+            return(ft_handle_error("dup2 stdin -> dup(sdin) in ft_dup"));
     }
 	if (current->next)
     {
 		dupret = dup2(fd->pip[WRITE], STDOUT_FILENO);
         if (dupret == -1)
-            return(ft_handle_error("dup2 firstcmd"));
+            return(ft_handle_error("dup2 stdout -> pipe write end in ft_dup"));
     }
 	else
     {
 		dupret = dup2(fd->outfile, STDOUT_FILENO);
         if (dupret == -1)
-            return(ft_handle_error("dup2 firstcmd"));
+            return(ft_handle_error("dup2 stdout -> outfile in ft_dup"));
     }
 }
