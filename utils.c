@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:07:39 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/06 12:52:38 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/08 23:58:51 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void	ft_close(t_fd *fd)
 void	ft_read_sdin(char *delim, int fd)
 {
 	char *line;
-	line = get_next_line(STDIN_FILENO);
 	char *tmp;
 
+	line = get_next_line(STDIN_FILENO);
 	tmp = ft_strjoin(delim, "\n");
 	while (line)
 	{
@@ -95,4 +95,5 @@ void	*ft_dup(t_cmd *current, t_cmd *firstcmd, t_fd *fd)
         if (dupret == -1)
             return(ft_handle_error("dup2 stdout -> outfile in ft_dup"));
     }
+	return(dupret);
 }

@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 01:07:57 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/05 23:19:46 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/09 00:07:37 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	ft_exec_cmd_lst(char **envp, t_fd *fd, t_cmd *cmdlst)
 		return ;
 	while (current)
 	{
+		printf(">%s<\n", current->binpath);
 		ft_redir(envp, current, fd, cmdlst);
 		current = current->next;
 	}

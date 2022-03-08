@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/06 12:53:48 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/09 00:18:10 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 {
 	pid_t	pid;
 	int	pipret;
+	int	execret;
 
 	pipret = pipe(fd->pip);
 	if (pipret == -1)
@@ -64,7 +65,10 @@ void	ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 	{
 		ft_dup(current, firstcmd, fd);
 		ft_close(fd);
-		execve(current->binpath, current->args, envp);
+		execret = execve(current->binpath, current->args, envp);
+		if (execret == -1)
+			exit(EXIT_FAILURE); 
+
 	}
 	dup2(fd->pip[READ], fd->sdin);
 	close(fd->pip[WRITE]);

@@ -1,4 +1,7 @@
-int main()
+#include <unistd.h>
+
+int main(int ac, char **av, char **envp)
 {
-	write(1, "H", 1);
+	char *args[] = {"sbalbvjv", "1s"};
+	execve("/bin/sleep", args, envp);
 }

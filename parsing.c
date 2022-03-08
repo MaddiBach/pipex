@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:09:38 by maddi             #+#    #+#             */
-/*   Updated: 2022/02/26 14:00:13 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/08 23:32:48 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**ft_join_path_bin(char **binpath, char **args)
 		binpath[i] = ft_strjoin(binpath[i], "/");
 		tmp = binpath[i];
 		binpath[i] = ft_strjoin(binpath[i], args[0]);
-		// estce que le path est valide ?
+
 		i++;
 	}
 	return (binpath);
