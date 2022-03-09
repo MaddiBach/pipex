@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:09:38 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/08 23:32:48 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/09 20:25:13 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*ft_get_bin_path(char **envp, char **args)
 {
 	if (!ft_strncmp(".", args[0], 1))
-		return (args[0]);
+		return (ft_strdup(args[0]));
 	else
 		return (ft_get_absolute_path(envp, args));
 }
@@ -24,7 +24,7 @@ char	*ft_get_absolute_path(char **envp, char **args)
 {
 	int		i;
 	char	**binpath;
-	char	**tmp;
+	char	*ret;
 
 	i = 0;
 	if (!envp)
@@ -32,8 +32,10 @@ char	*ft_get_absolute_path(char **envp, char **args)
 	while (ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	binpath = ft_split(envp[i] + 6, ':');
-	binpath = ft_join_path_bin(binpath, args);
-	return (ft_get_access(binpath));
+	ft_join_path_bin(binpath, args);
+	ret = ft_strdup(ft_get_access(binpath));
+	ft_freesplit(binpath);
+	return (ret);
 }
 
 char	*ft_get_access(char **binpath)
@@ -50,7 +52,7 @@ char	**ft_join_path_bin(char **binpath, char **args)
 {
 	int		i;
 	char	*tmp;
-
+	
 	i = 0;
 	if (!binpath)
 		return (NULL);
@@ -58,9 +60,10 @@ char	**ft_join_path_bin(char **binpath, char **args)
 	{
 		tmp = binpath[i];
 		binpath[i] = ft_strjoin(binpath[i], "/");
+		free(tmp);
 		tmp = binpath[i];
 		binpath[i] = ft_strjoin(binpath[i], args[0]);
-
+		free(tmp);
 		i++;
 	}
 	return (binpath);

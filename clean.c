@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 04:50:14 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/06 13:04:16 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/09 20:24:48 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void    ft_delcmd(t_cmd *cmd)
 {
     free(cmd->binpath);
     ft_freesplit(cmd->args);
-   // free(cmd->next);
     free(cmd);
 }
 

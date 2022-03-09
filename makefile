@@ -1,6 +1,6 @@
 NAME = pipex
 
-FLAGS = -Wall -Werror -Wextra -g 
+FLAGS = -Wall -Werror -Wextra -g3 
 LIBFT = -L libft -lft
 
 OBJS_DIR = .obj

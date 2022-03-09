@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:07:39 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/08 23:58:51 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/09 17:10:00 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ft_close(t_fd *fd)
 	close(fd->sdin);
 	close(fd->outfile);
 	close(fd->infile);
+	free(fd);
 }
 
 void	ft_read_sdin(char *delim, int fd)
