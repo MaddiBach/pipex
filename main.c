@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/09 17:27:15 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/16 17:14:45 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
 	pid = fork();
 	if (!pid)
 	{
-		ft_dup(current, firstcmd, fd);
+		ft_dup(current, firstcmd, fd);		
 		ft_close(fd);
 		execret = execve(current->binpath, current->args, envp);
 		if (execret == -1)

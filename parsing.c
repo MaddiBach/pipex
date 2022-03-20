@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:09:38 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/09 20:25:13 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/16 17:21:48 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,16 @@ char	*ft_get_absolute_path(char **envp, char **args)
 	char	*ret;
 
 	i = 0;
-	if (!envp)
+	if (!envp || !args)
 		return (NULL);
 	while (ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	binpath = ft_split(envp[i] + 6, ':');
 	ft_join_path_bin(binpath, args);
-	ret = ft_strdup(ft_get_access(binpath));
+	if (ft_get_access(binpath))
+		ret = ft_strdup(ft_get_access(binpath));
+	else
+		ret = malloc(1);
 	ft_freesplit(binpath);
 	return (ret);
 }
