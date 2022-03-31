@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:13:12 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/09 18:09:37 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/31 09:05:42 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_cmd
 {
 	char			*binpath;
 	char			**args;
+	pid_t		pid;
 	struct s_cmd	*next;
 }					t_cmd;
 

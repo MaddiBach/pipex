@@ -7,15 +7,6 @@ OBJS_DIR = .obj
 INCLUDES = includes
 LIBFT_PATH = libft
 
-SRCSB = \
-main_bonus.c \
-parsing.c \
-lists.c \
-utils.c \
-get_next_line/get_next_line.c \
-get_next_line/get_next_line_utils.c \
-clean.c
-
 SRCS = \
 main.c \
 parsing.c \
@@ -24,8 +15,6 @@ utils.c \
 get_next_line/get_next_line.c \
 get_next_line/get_next_line_utils.c \
 clean.c
-
-OBJB = $(SRCSB:.c=.o)
 
 OBJ = $(SRCS:.c=.o)
 
