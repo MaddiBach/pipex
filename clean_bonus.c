@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/30 01:53:03 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/30 01:53:19 by maddi            ###   ########.fr       */
+/*   Created: 2022/02/24 04:50:14 by maddi             #+#    #+#             */
+/*   Updated: 2022/03/31 09:56:34 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void    ft_freesplit(char **str)
 {
@@ -32,4 +32,18 @@ void    ft_delcmd(t_cmd *cmd)
     free(cmd->binpath);
     ft_freesplit(cmd->args);
     free(cmd);
+}
+
+void	ft_cmdclear(t_cmd **cmd, void (*del)(t_cmd *))
+{
+	t_cmd	*temp;
+
+	if (!cmd || !*cmd || !del)
+		return ;
+	while (*cmd)
+	{
+		temp = (*cmd)->next;
+		del(*cmd);
+		*cmd = temp;
+	}
 }

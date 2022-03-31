@@ -7,14 +7,23 @@ OBJS_DIR = .obj
 INCLUDES = includes
 LIBFT_PATH = libft
 
-SRCS = \
-main.c \
-parsing.c \
-lists.c \
-utils.c \
+SRCSB = \
+main_bonus.c \
+parsing_bonus.c \
+lists_bonus.c \
+utils_bonus.c \
 get_next_line/get_next_line.c \
 get_next_line/get_next_line_utils.c \
 clean.c
+
+SRCS = \
+main.c \
+parsing.c \
+get_next_line/get_next_line.c \
+get_next_line/get_next_line_utils.c \
+clean.c
+
+OBJB = $(SRCSB:.c=.o)
 
 OBJ = $(SRCS:.c=.o)
 
@@ -24,13 +33,25 @@ ${NAME}: ${OBJ}
 	make bonus -C ./libft
 	gcc ${FLAGS} ${OBJ} libft/libft.a -o ${NAME}
 
-re: clean all
+bonus: ${OBJB}
+	make bonus -C ./libft
+	gcc ${FLAGS} ${OBJB} libft/libft.a -o ${NAME}
+
+
+re: fclean all
+
 lib:
-	@make -C ./libft
+	@make re -C ./libft
 
 clean:
 	@make clean -C ./libft
-	@rm -f ${OBJ}
+	@rm -f ${OBJ} ${OBJB}
+
+fclean: clean
+	@rm -f ${NAME}
+	
+
+
 
 
 

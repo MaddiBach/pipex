@@ -6,15 +6,15 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:09:38 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/30 17:50:54 by maddi            ###   ########.fr       */
+/*   Updated: 2022/03/31 09:55:54 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	*ft_get_bin_path(char **envp, char **args)
 {
-	if (!ft_strncmp(".", args[0], 1))
+	if (!ft_strncmp(".", args[0], 1) || ft_strncmp("/", args[0], 1))
 		return (ft_strdup(args[0]));
 	else
 		return (ft_get_absolute_path(envp, args));

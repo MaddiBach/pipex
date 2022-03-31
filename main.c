@@ -5,96 +5,119 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/21 10:26:09 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/16 17:14:45 by maddi            ###   ########.fr       */
+/*   Created: 2022/03/30 00:28:45 by maddi             #+#    #+#             */
+/*   Updated: 2022/03/31 10:31:15 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_cmd	*make_cmd_lst(int ac, char **av, char **envp, int heredoc)
+int ft_handle_error(char *error)
 {
-	int		i;
-	t_cmd	*lst;
-
-	if (!heredoc)
-	{
-		lst = ft_newlst(envp, av[3]);
-		i = 4;
-	}
-	else
-	{
-		lst = ft_newlst(envp, av[2]);
-		i = 3;
-	}
-	while (i < ac - 1)
-	{
-		ft_lstadd_cmd(&lst, envp, av[i]);
-		i++;
-	}
-	return (lst);
-}
-
-int	ft_heredoc(char *delim, t_fd *fd)
-{
-	char	*line;
-	pid_t	pid;
-	int		pipret;
-
-	pipret = pipe(fd->pip);
-	if (pipret == -1)
-	{
-		ft_handle_error("pipe in ft_heredoc");
-		return (-1);
-	}
-	ft_read_sdin(delim, fd->pip[WRITE]);
-	return (fd->pip[READ]);
-}
-
-void	ft_redir(char **envp, t_cmd *current, t_fd *fd, t_cmd *firstcmd)
-{
-	pid_t	pid;
-	int	pipret;
-	int	execret;
-
-	pipret = pipe(fd->pip);
-	if (pipret == -1)
-		ft_handle_error("pipe in ft_redir");
+	int pid;
 	pid = fork();
 	if (!pid)
-	{
-		ft_dup(current, firstcmd, fd);		
-		ft_close(fd);
-		execret = execve(current->binpath, current->args, envp);
-		if (execret == -1)
-			exit(EXIT_FAILURE); 
-
-	}
-	dup2(fd->pip[READ], fd->sdin);
-	close(fd->pip[WRITE]);
-	close(fd->pip[READ]);
+    	exit(EXIT_FAILURE);
+	perror(error);
 }
 
-int	main(int ac, char **av, char **envp)
+int ft_exec_cmd0(char **av, char ** envp, int *pip)
 {
-	t_cmd	*cmdlst;
-	t_fd	*fd;
-	int		dupret;
+    pid_t pid;
+    t_cmd *cmd;
+    
+    cmd = malloc(sizeof(t_cmd));
+    cmd->args = ft_split(av[2], ' ');
+    cmd->binpath = ft_get_bin_path(envp, cmd->args);
+    pid = fork();
+    if (pid < 0)
+        ft_handle_error("fork");
+    if (!pid)
+    {
+        dup2(pip[WRITE], 1);
+        close(pip[READ]);
+        close(pip[WRITE]);
+        
+        int execret = execve(cmd->binpath, cmd->args, envp);
+        if (execret < 0)
+            perror("process 1");
+    }
+    ft_delcmd(cmd);
+    return (pid);
+}
 
-	if (ac < 5 || *envp == NULL)
-		return (-1);
-	fd = ft_open(ac, av, ft_strncmp(av[1], "here_doc", 8));
-	if (!fd)
-		return (-1);
-	cmdlst = make_cmd_lst(ac, av, envp, ft_strncmp(av[1], "here_doc", 8));
-	dupret = dup2(fd->infile, STDIN_FILENO);
-	if (dupret == -1)
+int ft_exec_cmd1(char **av, char ** envp, int *pip)
+{
+    int pid;
+    t_cmd *cmd;
+    
+    cmd = malloc(sizeof(t_cmd));
+    cmd->args = ft_split(av[3], ' ');
+    cmd->binpath = ft_get_bin_path(envp, cmd->args);
+    pid = fork();
+    if (pid < 0)
+        perror("fork");
+    if (!pid)
+    {
+        dup2(pip[READ], STDIN_FILENO);
+        close(pip[READ]);
+        close(pip[WRITE]);
+        int execret = execve(cmd->binpath, cmd->args, envp);
+        if (execret < 0)
+            perror("process 2");
+    }
+    ft_delcmd(cmd);
+    return (pid);
+}
+
+
+int ft_open(char **av)
+{
+    int infile;
+    int outfile;
+    int dupret;
+    
+
+    infile = open(av[1], O_RDONLY);
+    if (infile < 0)
+        return (ft_handle_error("infile"));
+    outfile = open(av[4], O_CREAT| O_TRUNC| O_RDWR, 0777);
+    if (outfile < 0)
+        return (ft_handle_error("outfile"));
+    dupret = dup2(infile, STDIN_FILENO);
+    if (dupret < 0)
+        return (ft_handle_error("dup2 infile"));     
+    dupret = dup2(outfile, STDOUT_FILENO);
+    if (dupret < 0)
+        return (ft_handle_error("dup2 outfile"));
+    close(outfile);
+    close(infile);
+    return (1);    
+}
+
+int main(int ac, char **av, char **envp)
+{
+    int openret;
+    int pip[2];
+    int status;
+    if (ac != 5)
 	{
-		perror("dup2 in main");
-		return (-1);
+		ft_putstr_fd("Invalid Number of Arguments", STDERR_FILENO);
+        return (1);
 	}
-	ft_exec_cmd_lst(envp, fd, cmdlst);
-	ft_cmdclear(&cmdlst, ft_delcmd);
-	waitpid(-1, NULL, -1);
-	ft_close(fd);
+	if (*envp == NULL)
+	{
+		ft_putstr_fd("NULL env : Fail", STDERR_FILENO);
+		return (2);
+	}
+    pipe(pip);   
+    openret = ft_open(av);
+    if (openret == 0)
+        return (1);
+    int pid1 = ft_exec_cmd0(av, envp, pip);
+    int pid2 = ft_exec_cmd1(av, envp, pip);
+    waitpid(pid1, &status, 0);
+    waitpid(pid2, &status, 0);
+    close(pip[READ]);
+    close(pip[WRITE]);
 }
