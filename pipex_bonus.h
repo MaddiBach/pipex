@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:13:12 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/31 09:53:21 by maddi            ###   ########.fr       */
+/*   Updated: 2022/04/04 10:11:31 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void				*ft_dup(t_cmd *cmd, t_cmd *firstcmd, t_fd *fd);
 // <- redirect using dup2, with infile when positionned at firstcmd, pipe,
 //	and outfile when positionned at lastcmd
 void	*ft_handle_error(char *str);
+void	ft_cmdclear(t_cmd **cmd, void (*del)(t_cmd *));
 void	ft_read_sdin(char *delim, int fd);
 int	ft_heredoc(char *delim, t_fd *fd);
 

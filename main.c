@@ -6,7 +6,7 @@
 /*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 00:28:45 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/31 10:31:15 by maddi            ###   ########.fr       */
+/*   Updated: 2022/04/04 10:13:25 by maddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int ft_exec_cmd0(char **av, char ** envp, int *pip)
         dup2(pip[WRITE], 1);
         close(pip[READ]);
         close(pip[WRITE]);
-        
         int execret = execve(cmd->binpath, cmd->args, envp);
         if (execret < 0)
             perror("process 1");
@@ -116,8 +115,8 @@ int main(int ac, char **av, char **envp)
         return (1);
     int pid1 = ft_exec_cmd0(av, envp, pip);
     int pid2 = ft_exec_cmd1(av, envp, pip);
-    waitpid(pid1, &status, 0);
-    waitpid(pid2, &status, 0);
     close(pip[READ]);
     close(pip[WRITE]);
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
 }
