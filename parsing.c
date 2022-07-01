@@ -3,33 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rmechety <rmechety@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 00:09:38 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/30 17:50:54 by maddi            ###   ########.fr       */
+/*   Updated: 2022/06/29 17:56:39 by rmechety         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*ft_get_bin_path(char **envp, char **args)
+char *ft_get_bin_path(char **envp, char **args)
 {
 	if (!ft_strncmp(".", args[0], 1))
+		// args[0] == '.'
 		return (ft_strdup(args[0]));
 	else
 		return (ft_get_absolute_path(envp, args));
 }
 
-char	*ft_get_absolute_path(char **envp, char **args)
+char *ft_get_absolute_path(char **envp, char **args)
 {
-	int		i;
-	char	**binpath;
-	char	*ret;
-
+	int i;
+	char **binpath;
+	char *ret;
 	i = 0;
 	if (!envp || !args)
 		return (NULL);
-	while (ft_strncmp(envp[i], "PATH=", 5))
+	while (ft_strncmp(envp[i], "PATH=", 5) && envp[i + 1])
 		i++;
 	binpath = ft_split(envp[i] + 6, ':');
 	ft_join_path_bin(binpath, args);
@@ -41,9 +41,9 @@ char	*ft_get_absolute_path(char **envp, char **args)
 	return (ret);
 }
 
-char	*ft_get_access(char **binpath)
+char *ft_get_access(char **binpath)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (access(binpath[i], X_OK) != 0 && binpath[i])
@@ -51,11 +51,11 @@ char	*ft_get_access(char **binpath)
 	return (binpath[i]);
 }
 
-char	**ft_join_path_bin(char **binpath, char **args)
+char **ft_join_path_bin(char **binpath, char **args)
 {
-	int		i;
-	char	*tmp;
-	
+	int i;
+	char *tmp;
+
 	i = 0;
 	if (!binpath)
 		return (NULL);

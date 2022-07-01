@@ -1,6 +1,6 @@
 NAME = pipex
 
-FLAGS = -Wall -Werror -Wextra -g3 
+FLAGS = -Wall -Werror -Wextra -g3
 LIBFT = -L libft -lft
 
 OBJS_DIR = .obj
@@ -14,7 +14,7 @@ lists_bonus.c \
 utils_bonus.c \
 get_next_line/get_next_line.c \
 get_next_line/get_next_line_utils.c \
-clean.c
+clean_bonus.c
 
 SRCS = \
 main.c \
@@ -49,7 +49,7 @@ clean:
 
 fclean: clean
 	@rm -f ${NAME}
-	
+
 
 
 

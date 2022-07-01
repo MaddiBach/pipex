@@ -3,57 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   lists.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maddi <maddi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rmechety <rmechety@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 01:07:57 by maddi             #+#    #+#             */
-/*   Updated: 2022/03/16 16:44:50 by maddi            ###   ########.fr       */
+/*   Updated: 2022/06/29 17:57:11 by rmechety         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_cmd	*ft_newlst(char **envp, char *arg)
+t_cmd *ft_newlst(char **envp, char *arg)
 {
-	t_cmd	*new;
+	t_cmd *new;
 
 	if (!envp)
 		return (NULL);
 	new = malloc(sizeof(t_cmd));
 	if (!new)
 		return (NULL);
-	new->args = ft_split(arg, ' ');
+	new->args = ft_split(arg, ' '); // rien a faire ici, donne plutot un char **arg
 	if (new->args == NULL)
-		return(ft_handle_error("split malloc in ft_newlst"));
+		return (ft_handle_error("split malloc in ft_newlst")); // creer un leaks sur newlst
 	new->binpath = ft_get_bin_path(envp, new->args);
 	if (new->binpath == NULL)
-		return(ft_handle_error("ft_get_bin_path malloc in ft_newlst"));
+		return (ft_handle_error("ft_get_bin_path malloc in ft_newlst"));
 	new->next = NULL;
 	return (new);
 }
 
-void	ft_lstadd_cmd(t_cmd **first, char **envp, char *arg)
+void ft_lstadd_cmd(t_cmd **first, char **envp, char *arg)
 {
-	t_cmd	*newcmd;
-	t_cmd	*tmp;
+	t_cmd *newcmd;
+	t_cmd *tmp;
 
 	if (!envp || !arg)
-		return ;
+		return;
 	newcmd = ft_newlst(envp, arg);
 	if (!newcmd)
 	{
 		perror("ft_newlst malloc in addcmd");
 		ft_putstr_fd(strerror(errno), 2);
-		return ;
+		return;
 	}
 	tmp = *first;
 	while (tmp && tmp->next)
 		tmp = tmp->next;
-	tmp->next = newcmd;
+	tmp->next = newcmd; // sigsev
 }
 
-int	ft_cmdsize(t_cmd *lst)
+int ft_cmdsize(t_cmd *lst)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (lst)
@@ -64,13 +64,13 @@ int	ft_cmdsize(t_cmd *lst)
 	return (i);
 }
 
-void	ft_exec_cmd_lst(char **envp, t_fd *fd, t_cmd *cmdlst)
+void ft_exec_cmd_lst(char **envp, t_fd *fd, t_cmd *cmdlst)
 {
-	t_cmd	*current;
+	t_cmd *current;
 
 	current = cmdlst;
 	if (!envp)
-		return ;
+		return;
 	while (current)
 	{
 		ft_redir(envp, current, fd, cmdlst);
